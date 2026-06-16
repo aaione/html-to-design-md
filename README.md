@@ -12,7 +12,7 @@ npx skills add aaione/html-to-design-md -a codex   # target a specific agent
 npx skills add aaione/html-to-design-md -g         # global install
 ```
 
-One canonical `SKILL.md` works across 80+ agents. The [skills CLI](https://skills.sh) (`vercel-labs/skills`) symlinks it into each agent's skills directory (`.claude/skills/`, `.agents/skills/`, `.codex/skills/`, …) — no per-agent adapters needed. (`agents/openai.yaml` carries optional Codex catalog metadata.)
+One canonical `SKILL.md` works across many agents via the [skills CLI](https://skills.sh) (`vercel-labs/skills`), which symlinks it into each agent's skills directory (`.claude/skills/`, `.agents/skills/`, `.codex/skills/`, …) — no per-agent adapters needed. Install flags and the supported-agent list follow whatever the installed CLI reports (`skills add --help`). (`agents/openai.yaml` carries optional Codex catalog metadata.)
 
 ## Use
 
@@ -86,7 +86,7 @@ The bundled example doubles as a fixture:
 npx -y @google/design.md lint references/EXAMPLE.md   # expect exit 0
 ```
 
-Run this with a Node/npm pairing supported by the currently resolved npm package.
+Use a Node/npm version compatible with the resolved `@google/design.md` package.
 
 ## Compatibility
 
@@ -94,7 +94,7 @@ Run this with a Node/npm pairing supported by the currently resolved npm package
 |:------|:-------|:--------|
 | Claude Code | Supported | `SKILL.md` |
 | Codex / OpenAI | Supported | `agents/openai.yaml` |
-| Cursor, Cline, Copilot, Gemini, +80 more | Standard `SKILL.md` via skills CLI | — |
+| Cursor, Cline, Copilot, Gemini, others | Standard `SKILL.md` via skills CLI | — |
 
 ## License
 
