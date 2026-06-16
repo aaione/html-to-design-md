@@ -1,6 +1,6 @@
 # DESIGN.md Format Reference
 
-Authoritative compact reference for generating or repairing `DESIGN.md` files validated by the `@google/design.md` CLI. Source of truth: the `@google/design.md` spec (`npx @google/design.md lint`).
+Authoritative compact reference for generating or repairing `DESIGN.md` files validated by the `@google/design.md` CLI. Source of truth: the currently resolved `@google/design.md` linter (`npx @google/design.md lint`). If upstream docs and the CLI disagree, the CLI result wins and the final response should mention the version/runtime used.
 
 ## Structure
 
@@ -71,7 +71,7 @@ components:
 
 ### Token Rules
 
-- **Colors** are single sRGB hex strings such as `"#1A1C1E"`. Do **not** use arrays (`surface: [light, dark]`) — the linter rejects them with `is not a valid color`. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and describe the mapping in the Colors prose.
+- **Colors** are single sRGB hex strings such as `"#1A1C1E"`. Do **not** use arrays (`surface: [light, dark]`) unless the current CLI explicitly accepts them — recent linter behavior rejects arrays with `is not a valid color`. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and describe the mapping in the Colors prose.
 - **Dimensions** include units (`px`, `rem`, `em`).
 - **Token references** use braces, e.g. `{colors.primary}`, `{typography.body-md}`, `{rounded.md}`, `{spacing.md}`. Unresolvable references are the one hard lint error.
 - **Component sub-tokens are whitelisted:** only `backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, `width` are recognized — any other key (e.g. `borderColor`, `aspectRatio`) triggers an "unrecognized sub-token" warning. Express anything else (focus rings, aspect ratios, motion, borders) in prose.
@@ -108,6 +108,27 @@ When the source uses a framework, map its primitives to DESIGN.md tokens — but
 | MUI / Material | `createTheme` palette & typography | Map palette slots to color tokens. |
 
 Class-to-value rules must be verified in config: `rounded-sm/md/lg/xl/full`, the spacing base (4px vs 8px), and the font-size scale. If no config is reachable, fall back to computed styles and mark inferred.
+
+## HTML / Website Extraction
+
+Use the richest evidence path available and state gaps in the final response.
+
+| Source | Strongest evidence | Notes |
+|:--|:--|:--|
+| Saved HTML | Local markup, inline CSS, linked local CSS/assets | Resolve relative paths from the HTML file before inferring values. |
+| Rendered URL / localhost | DOM, linked stylesheets, computed styles, screenshots across at least desktop and mobile when possible | Computed styles prove shipped behavior; screenshots help confirm visual hierarchy. |
+| Framework source present | Theme files, Tailwind config, CSS variables, component styles | Intent tokens beat framework defaults. |
+| Screenshot-only | Pixel sampling and visual inference | Last resort; keep inferred values in prose and avoid over-tokenizing. |
+
+Reject low-evidence output. If the page is an auth wall, consent page, error page, or empty SPA shell without rendering access, report the blocker instead of generating a misleading DESIGN.md.
+
+## Minimum Output Coverage
+
+- `colors.primary` plus surface/background, text/on-* pairs, accent/interactive colors, and functional states when present.
+- At least one body typography token and the visible heading/label scale.
+- A spacing scale and radius scale that match observed layout primitives.
+- Components for real UI primitives: primary button, card/container or equivalent, navigation/input/status when present, plus 1-2 domain-specific components.
+- Markdown prose for non-whitelisted properties such as borders, shadows, motion, aspect ratios, blur, and responsive behavior.
 
 ## Section Order
 

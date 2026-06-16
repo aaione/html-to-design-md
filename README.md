@@ -68,12 +68,15 @@ See [`references/EXAMPLE.md`](references/EXAMPLE.md) for a complete, lint-clean 
 
 ## How it works
 
-1. **Inspect** the rendered page (browser tool when available) or raw HTML/CSS, preferring computed styles over screenshot sampling.
-2. **Extract** exact token values from CSS variables, computed styles, framework classes, and inline styles. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and note the mapping in prose — never use color arrays, the linter rejects them.
-3. **Write** `DESIGN.md` following the canonical section order, mirroring `EXAMPLE.md`.
-4. **Validate** with `@google/design.md lint` until it exits 0; only `broken-ref` is a hard error.
+1. **Collect evidence** from the richest available source: local HTML/CSS, rendered URL/localhost DOM, computed styles, screenshots, or framework theme files.
+2. **Inspect** the visual system across colors, typography, spacing, radii, shadows, component states, responsive behavior, and domain-specific components.
+3. **Extract** exact token values from CSS variables, computed styles, framework classes, and inline styles. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and note the mapping in prose — recent linter behavior rejects color arrays.
+4. **Write** `DESIGN.md` following the canonical section order, mirroring `EXAMPLE.md`.
+5. **Validate** with `@google/design.md lint` until it exits 0; only `broken-ref` is a hard error.
 
 Full operational rules, edge cases (SPA shells, auth-gated pages, multi-page synthesis), and the token schema live in [`SKILL.md`](SKILL.md) and [`references/design-md-format.md`](references/design-md-format.md).
+
+The skill is deliberately evidence-first. If the page is only an auth wall, consent screen, empty SPA shell, or otherwise cannot be inspected with available tools, it reports the blocker instead of fabricating a design system.
 
 ## Self-check
 
@@ -82,6 +85,8 @@ The bundled example doubles as a fixture:
 ```bash
 npx -y @google/design.md lint references/EXAMPLE.md   # expect exit 0
 ```
+
+Run this with a Node/npm pairing supported by the currently resolved npm package.
 
 ## Compatibility
 
