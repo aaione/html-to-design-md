@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML to DESIGN.md"
+  short_description: "Generate DESIGN.md from websites or HTML"
+  default_prompt: "Use $html-to-design-md to generate a DESIGN.md from this website or local HTML file."
