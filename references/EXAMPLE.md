@@ -7,6 +7,7 @@ colors:
   secondary: "#6C7278"
   accent: "#B8422E"
   background: "#F7F5F2"
+  surface-dark: "#1A1C1E"
   on-primary: "#FFFFFF"
   on-accent: "#FFFFFF"
 typography:
@@ -61,6 +62,12 @@ components:
   caption:
     textColor: "{colors.secondary}"
     typography: "{typography.body-md}"
+  card-dark:
+    backgroundColor: "{colors.surface-dark}"
+    textColor: "#FFFFFF"
+    typography: "{typography.body-md}"
+    rounded: "{rounded.lg}"
+    padding: "{spacing.md}"
 ---
 
 ## Overview
@@ -75,6 +82,7 @@ The palette is rooted in high-contrast neutrals plus a single accent.
 - **Secondary (#6C7278):** Sophisticated slate for captions, metadata, and dividers.
 - **Accent (#B8422E):** "Boston Clay" — the sole driver for primary actions; use once per view.
 - **Background (#F7F5F2):** Warm limestone foundation, softer than pure white.
+- **Surface-dark (#1A1C1E):** Dark-theme container fill (see `card-dark`). Alternate themes use a separate scalar token like this — never a `[light, dark]` array, which the linter rejects.
 - **On-primary / On-accent (#FFFFFF):** Text placed on the primary and accent fills; both clear WCAG AA.
 
 ## Typography
@@ -104,6 +112,7 @@ Corner radius follows a three-step scale. Buttons take `rounded.sm` (4px) to sta
 - **Hero:** Full-bleed headline block on the background, `h1` type in primary ink.
 - **Banner:** High-contrast strip on the primary fill with `on-primary` text for announcements.
 - **Caption:** Secondary slate text for metadata beneath images and cards.
+- **Card (dark):** The `card-dark` variant inverts to the `surface-dark` fill with white text — a lint-clean demonstration that alternate themes are expressed as separate scalar tokens, not color arrays.
 
 ## Do's and Don'ts
 
