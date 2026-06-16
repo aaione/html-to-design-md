@@ -7,10 +7,12 @@ An [Agent Skills](https://agentskills.io) skill that inspects an observed UI, ex
 ## Install
 
 ```bash
-npx skillsadd aaione/html-to-design-md
+npx skills add aaione/html-to-design-md            # default agent
+npx skills add aaione/html-to-design-md -a codex   # target a specific agent
+npx skills add aaione/html-to-design-md -g         # global install
 ```
 
-Works across agents: **Claude Code**, **Codex**, Cursor, Copilot, and others on the open skills ecosystem. A Codex/OpenAI adapter ships at `agents/openai.yaml`.
+One canonical `SKILL.md` works across 80+ agents. The [skills CLI](https://skills.sh) (`vercel-labs/skills`) symlinks it into each agent's skills directory (`.claude/skills/`, `.agents/skills/`, `.codex/skills/`, …) — no per-agent adapters needed. (`agents/openai.yaml` carries optional Codex catalog metadata.)
 
 ## Use
 
@@ -67,7 +69,7 @@ See [`references/EXAMPLE.md`](references/EXAMPLE.md) for a complete, lint-clean 
 ## How it works
 
 1. **Inspect** the rendered page (browser tool when available) or raw HTML/CSS, preferring computed styles over screenshot sampling.
-2. **Extract** exact token values from CSS variables, computed styles, framework classes, and inline styles. Dark/alternate themes are captured as `[light, dark]` color arrays.
+2. **Extract** exact token values from CSS variables, computed styles, framework classes, and inline styles. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and note the mapping in prose — never use color arrays, the linter rejects them.
 3. **Write** `DESIGN.md` following the canonical section order, mirroring `EXAMPLE.md`.
 4. **Validate** with `@google/design.md lint` until it exits 0; only `broken-ref` is a hard error.
 
@@ -87,7 +89,7 @@ npx -y @google/design.md lint references/EXAMPLE.md   # expect exit 0
 |:------|:-------|:--------|
 | Claude Code | Supported | `SKILL.md` |
 | Codex / OpenAI | Supported | `agents/openai.yaml` |
-| Cursor, Cline, others | Standard `SKILL.md` (untested) | — |
+| Cursor, Cline, Copilot, Gemini, +80 more | Standard `SKILL.md` via skills CLI | — |
 
 ## License
 

@@ -52,7 +52,7 @@ version: <string>          # optional, current value "alpha"
 name: <string>             # REQUIRED
 description: <string>      # optional
 colors:
-  <token>: <Color | [Color, Color]>   # hex string, or a [light, dark] array for themes
+  <token>: <Color>            # a single sRGB hex string, e.g. "#1A1C1E" (arrays are rejected)
 typography:
   <token>:                  # keys are camelCase
     fontFamily: <string>
@@ -71,7 +71,7 @@ components:
 
 ### Token Rules
 
-- **Colors** are sRGB hex strings such as `"#1A1C1E"`. For light/dark themes use a two-element array: `surface: ["#F7F5F2", "#1A1C1E"]` and describe the mapping in the Colors prose. (Array colors are documented in prose; the linter's contrast check targets scalar color pairs.)
+- **Colors** are single sRGB hex strings such as `"#1A1C1E"`. Do **not** use arrays (`surface: [light, dark]`) — the linter rejects them with `is not a valid color`. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and describe the mapping in the Colors prose.
 - **Dimensions** include units (`px`, `rem`, `em`).
 - **Token references** use braces, e.g. `{colors.primary}`, `{typography.body-md}`, `{rounded.md}`, `{spacing.md}`. Unresolvable references are the one hard lint error.
 - **Component variants** are separate entries, e.g. `button-primary-hover`.
@@ -115,5 +115,6 @@ Only `broken-ref` is a hard error. Everything else is a warning or info — reso
 | `section-order` | warning | Sections appear out of the canonical order above |
 | `token-summary` | info | Per-section count of defined tokens |
 | `missing-sections` | info | Optional sections (spacing, rounded) absent while other tokens exist |
+| `unknown-key` | warning | A top-level YAML key that looks like a typo of a known key (e.g. `colours:` → `colors:`) |
 
-Fix all errors before completion. Common real causes of failure: unresolvable token references, a missing `primary` color, low-contrast component pairs, and out-of-order headings.
+Fix all errors before completion. Common real causes of failure: unresolvable token references, a missing `primary` color, low-contrast component pairs, out-of-order headings, and typo'd top-level keys (caught by `unknown-key`).

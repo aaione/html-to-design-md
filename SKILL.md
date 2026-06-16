@@ -19,7 +19,7 @@ Keep `references/design-md-format.md` open for the token schema, canonical secti
 
 2. **Inspect the design.** Capture token evidence — colors, typography, spacing scale, radii, shadows, component states, layout density, responsive behavior. Inspect source and computed styles before relying on screenshot inference; mark any inferred value in prose, never in a token name.
 
-3. **Extract tokens.** Pull exact values from CSS variables, computed styles, framework classes, or inline styles. Emit at minimum `name`, `colors` (including a `primary`), `typography`, `rounded`, `spacing`, and the observable `components`. When the source exposes a dark/alternate theme, capture those colors as two-element `[light, dark]` arrays and document the mapping in the Colors section.
+3. **Extract tokens.** Pull exact values from CSS variables, computed styles, framework classes, or inline styles. Emit at minimum `name`, `colors` (including a `primary`), `typography`, `rounded`, `spacing`, and the observable `components`. For a dark/alternate theme, add separate scalar tokens (e.g. `surface-dark: "#1A1C1E"`) and document the mapping in the Colors section — color arrays (`[light, dark]`) are rejected by the linter.
 
 4. **Write `DESIGN.md`.** Frontmatter delimited by `---`; exact sRGB hex colors; dimensions with units; component tokens reference tokens like `{colors.primary}`. Follow the canonical section order (see the reference). Prose should state *why* tokens exist and *how* future UI applies them. Mirror `references/EXAMPLE.md`.
 
@@ -41,4 +41,4 @@ Only `broken-ref` is a hard error (exit 1); the rest are warnings/info. Warnings
 ## Output Contract
 
 - Preserve observed source truth over aesthetic invention.
-- Include enough tokens and prose for another agent to generate visually consistent screens, and exit `npx -y @google/design.md lint` with code 0.
+- Include enough tokens and prose for another agent to generate visually consistent screens, and validate with `npx -y @google/design.md lint --format json <output-dir>/DESIGN.md` asserting `summary.errors === 0` and that `colors`, `typography`, `spacing`, and `components` are present (a bare exit code is not sufficient).
