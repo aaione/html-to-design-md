@@ -1,13 +1,15 @@
 ---
 version: "alpha"
 name: Atlas Editorial
-description: A design system for a premium editorial product — high-contrast neutrals with a single interaction accent.
+description: A design system for a premium editorial product — high-contrast neutrals with a single interaction accent and explicit functional states.
 colors:
   primary: "#1A1C1E"
   secondary: "#6C7278"
   accent: "#B8422E"
   background: "#F7F5F2"
   surface-dark: "#1A1C1E"
+  success: "#1B5E20"
+  error: "#B71C1C"
   on-primary: "#FFFFFF"
   on-accent: "#FFFFFF"
 typography:
@@ -17,6 +19,11 @@ typography:
     fontWeight: 600
     lineHeight: 1.1
     letterSpacing: -0.02em
+  headline-md:
+    fontFamily: Public Sans
+    fontSize: 32px
+    fontWeight: 600
+    lineHeight: 1.2
   body-md:
     fontFamily: Public Sans
     fontSize: 16px
@@ -32,6 +39,7 @@ rounded:
   sm: 4px
   md: 8px
   lg: 12px
+  full: 9999px
 spacing:
   xs: 4px
   sm: 8px
@@ -46,9 +54,18 @@ components:
     padding: "{spacing.sm} {spacing.md}"
   button-primary-hover:
     backgroundColor: "#9E3A28"
+  button-primary-focus:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
   card:
     backgroundColor: "{colors.background}"
     textColor: "{colors.primary}"
+    typography: "{typography.body-md}"
+    rounded: "{rounded.lg}"
+    padding: "{spacing.md}"
+  card-dark:
+    backgroundColor: "{colors.surface-dark}"
+    textColor: "#FFFFFF"
     typography: "{typography.body-md}"
     rounded: "{rounded.lg}"
     padding: "{spacing.md}"
@@ -62,9 +79,21 @@ components:
   caption:
     textColor: "{colors.secondary}"
     typography: "{typography.body-md}"
-  card-dark:
-    backgroundColor: "{colors.surface-dark}"
+  badge-success:
+    backgroundColor: "{colors.success}"
     textColor: "#FFFFFF"
+    typography: "{typography.label-caps}"
+    rounded: "{rounded.full}"
+    padding: "{spacing.xs} {spacing.sm}"
+  badge-error:
+    backgroundColor: "{colors.error}"
+    textColor: "#FFFFFF"
+    typography: "{typography.label-caps}"
+    rounded: "{rounded.full}"
+    padding: "{spacing.xs} {spacing.sm}"
+  product-card:
+    backgroundColor: "{colors.background}"
+    textColor: "{colors.primary}"
     typography: "{typography.body-md}"
     rounded: "{rounded.lg}"
     padding: "{spacing.md}"
@@ -72,26 +101,28 @@ components:
 
 ## Overview
 
-Architectural minimalism meets journalistic gravitas. The UI reads as a premium matte broadsheet — confident ink-on-limestone neutrals with one disciplined accent that drives every interaction. Restraint is the system: a single accent per screen, generous whitespace, and two typefaces that never compete.
+Architectural minimalism meets journalistic gravitas. The UI reads as a premium matte broadsheet — confident ink-on-limestone neutrals with one disciplined accent that drives every interaction. Restraint is the system: a single accent per screen, generous whitespace, and two typefaces that never compete. Functional states (success/error) are explicit, dedicated tokens — never ad-hoc greens and reds.
 
 ## Colors
 
-The palette is rooted in high-contrast neutrals plus a single accent.
+The palette is rooted in high-contrast neutrals plus a single accent; functional states are first-class tokens.
 
 - **Primary (#1A1C1E):** Deep ink for headlines, body text, and the banner.
 - **Secondary (#6C7278):** Sophisticated slate for captions, metadata, and dividers.
 - **Accent (#B8422E):** "Boston Clay" — the sole driver for primary actions; use once per view.
 - **Background (#F7F5F2):** Warm limestone foundation, softer than pure white.
 - **Surface-dark (#1A1C1E):** Dark-theme container fill (see `card-dark`). Alternate themes use a separate scalar token like this — never a `[light, dark]` array, which the linter rejects.
+- **Success (#1B5E20) / Error (#B71C1C):** Functional-state fills for status badges; grouped by role, not hue.
 - **On-primary / On-accent (#FFFFFF):** Text placed on the primary and accent fills; both clear WCAG AA.
 
 ## Typography
 
-Two voices: **Public Sans** carries the narrative, **Space Grotesk** labels technical data.
+Two voices: **Public Sans** carries the narrative across a four-step scale, **Space Grotesk** labels technical data.
 
-- **Headlines:** Public Sans Semi-Bold (h1) at 48px with tight tracking for an institutional voice.
-- **Body:** Public Sans Regular (body-md) at 16px / 1.6 for long-form readability.
-- **Labels:** Space Grotesk (label-caps), uppercase with 0.1em tracking, reserved for buttons and taxonomy.
+- **Display (h1):** Public Sans Semi-Bold at 48px, tight tracking, for institutional hero headlines.
+- **Headline (headline-md):** Public Sans Semi-Bold at 32px for section titles.
+- **Body (body-md):** Public Sans Regular at 16px / 1.6 for long-form readability.
+- **Labels (label-caps):** Space Grotesk, uppercase with 0.1em tracking, reserved for buttons, badges, and taxonomy.
 
 ## Layout
 
@@ -103,21 +134,22 @@ Depth is implied by contrast and surface, not heavy shadow. Keep surfaces flat o
 
 ## Shapes
 
-Corner radius follows a three-step scale. Buttons take `rounded.sm` (4px) to stay crisp; cards take `rounded.lg` (12px) to read as containers; `rounded.md` (8px) covers inputs and tags. Never mix radii within the same component group.
+Corner radius follows a four-step scale. Buttons take `rounded.sm` (4px) to stay crisp; cards take `rounded.lg` (12px); `rounded.md` (8px) covers inputs; `rounded.full` (9999px) makes pills of status badges. Never mix radii within the same component group.
 
 ## Components
 
-- **Buttons:** Primary actions use the accent fill with white label-caps text (≈5.4:1 contrast). The hover state darkens the accent to #9E3A28. There is no secondary button — restraint forces a single primary action per view.
-- **Cards:** Content cards sit on the background fill with `primary` text, `body-md` type, `rounded.lg`, and `spacing.md` padding.
-- **Hero:** Full-bleed headline block on the background, `h1` type in primary ink.
-- **Banner:** High-contrast strip on the primary fill with `on-primary` text for announcements.
+- **Buttons:** Primary actions use the accent fill with white label-caps text (≈5.4:1). The `hover` state darkens to #9E3A28; the `focus` state inverts to the primary fill for high visibility — states are modeled as separate component entries using recognized sub-tokens.
+- **Cards:** Content cards on the background fill with `primary` text, `body-md`, `rounded.lg`, `spacing.md`. The `card-dark` variant inverts to `surface-dark` — alternate themes via scalar tokens, not arrays.
+- **Hero:** Full-bleed headline block, `h1` type in primary ink.
+- **Banner:** High-contrast strip on the primary fill with `on-primary` text.
 - **Caption:** Secondary slate text for metadata beneath images and cards.
-- **Card (dark):** The `card-dark` variant inverts to the `surface-dark` fill with white text — a lint-clean demonstration that alternate themes are expressed as separate scalar tokens, not color arrays.
+- **Badges:** Pill-shaped (`rounded.full`) status indicators — `badge-success` and `badge-error` show how functional-state colors are bound to components.
+- **Product card:** A domain-specific component named for the listing it represents — same surface treatment as a card (its 4:3 image ratio is noted in prose, since `aspectRatio` is not a recognized token slot). Always emit 1-2 components unique to the site beyond generic primitives.
 
 ## Do's and Don'ts
 
 - **Do** use the accent for the single most important action per screen.
-- **Do** keep text on the primary/accent fills at `on-primary`/`on-accent` to hold WCAG AA.
-- **Don't** mix sharp and rounded corners within the same view.
-- **Don't** introduce a second accent color — the system is intentionally monochromatic-plus-one.
+- **Do** model functional states (success/error) as dedicated, named tokens — not ad-hoc hex values.
+- **Do** keep text on fills at the `on-*` tokens to hold WCAG AA.
+- **Don't** mix sharp and rounded corners, or introduce a second accent — the system is intentionally monochromatic-plus-one.
 - **Don't** apply drop shadows; separate surfaces with hairlines and whitespace instead.

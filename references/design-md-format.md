@@ -66,7 +66,7 @@ spacing:
   <level>: <Dimension | number>
 components:
   <name>:
-    <prop>: <string | token reference>   # backgroundColor textColor typography rounded padding size height width border-radius
+    <prop>: <string | token reference>   # ONLY recognized: backgroundColor, textColor, typography, rounded, padding, size, height, width
 ```
 
 ### Token Rules
@@ -74,8 +74,40 @@ components:
 - **Colors** are single sRGB hex strings such as `"#1A1C1E"`. Do **not** use arrays (`surface: [light, dark]`) — the linter rejects them with `is not a valid color`. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and describe the mapping in the Colors prose.
 - **Dimensions** include units (`px`, `rem`, `em`).
 - **Token references** use braces, e.g. `{colors.primary}`, `{typography.body-md}`, `{rounded.md}`, `{spacing.md}`. Unresolvable references are the one hard lint error.
+- **Component sub-tokens are whitelisted:** only `backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, `width` are recognized — any other key (e.g. `borderColor`, `aspectRatio`) triggers an "unrecognized sub-token" warning. Express anything else (focus rings, aspect ratios, motion, borders) in prose.
 - **Component variants** are separate entries, e.g. `button-primary-hover`.
 - Every defined color token should be referenced by at least one component (unreferenced colors warn as orphaned).
+
+## Extraction Source Priority
+
+Trust sources in this order; when they conflict, the higher one is the *declared intent* and wins, and you note the deviation in prose:
+
+1. **Intent tokens** — `tailwind.config` / `theme.ts`, `:root` CSS custom properties, theme & font files. The developer *declared* these as the system. Prefer them.
+2. **Computed styles** — the browser's resolved values on real elements. Use to confirm intent and fill gaps intent didn't name.
+3. **Inline / framework classes** — per-element Tailwind / CSS-in-JS. Actual shipped values; use to verify and catch overrides.
+4. **Screenshot sampling** — last resort, only when no source is reachable; always mark inferred.
+
+Code comments and custom-property names (`--brand-primary`, `--warm-50`) are the developer telling you the design intent — read them.
+
+## Color Organization
+
+- **Group by role, not hue:** primary/secondary/accent, surface/background, `on-*` (text on a fill), and functional states (success/error/warning/info).
+- **Deduplicate:** consolidate near-duplicates (`#333` and `#2C2C2C`) under one token — don't emit noise.
+- **Name functional states semantically:** `success`, `error`, and reference each from a component (e.g. `badge-success`) so it isn't orphaned.
+- **`on-*` convention:** pair every fill with its text token (`primary` / `on-primary`) so contrast is explicit and AA-checkable.
+
+## Reverse-engineering Tokens from Frameworks
+
+When the source uses a framework, map its primitives to DESIGN.md tokens — but **always resolve against the project's own config**, never framework defaults, or values won't be source-faithful.
+
+| Stack | Where tokens live | Notes |
+|:------|:------------------|:------|
+| Tailwind | `tailwind.config.{js,ts}` → `theme.extend.colors/spacing/borderRadius/fontFamily` | `rounded-lg` etc. are classes; resolve to the project's `borderRadius.lg`, not the 0.5rem default. |
+| shadcn/ui | `globals.css` `:root` HSL vars (`--primary`, `--radius`) | Already semantic tokens — lift directly. |
+| CSS-in-JS | theme object (styled-components/Emotion `theme`, Chakra `extendTheme`, MUI `createTheme`) | Read the theme object, not rendered styles. |
+| MUI / Material | `createTheme` palette & typography | Map palette slots to color tokens. |
+
+Class-to-value rules must be verified in config: `rounded-sm/md/lg/xl/full`, the spacing base (4px vs 8px), and the font-size scale. If no config is reachable, fall back to computed styles and mark inferred.
 
 ## Section Order
 
