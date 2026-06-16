@@ -30,6 +30,52 @@ The main regression check is the `@google/design.md` linter against `references/
 
 ## Commit & Pull Request Guidelines
 
-Recent history follows Conventional Commit-style subjects, for example `feat: enrich extraction methodology + example coverage`, `fix: cross-CLI docs + design.md correctness`, and `chore: drop redundant tests/sample.html fixture`. Keep subjects short, lower-case by type, and focused on the user-visible intent.
+Commits follow the [Conventional Commits](https://www.conventionalcommits.org/) specification. Each commit message uses this format:
 
-Pull requests should describe the changed guidance, list validation commands run, and call out any remaining lint warnings or unverified paths. Link related issues when available. Include before/after snippets only for substantial documentation or schema changes.
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- **type** (required, lowercase) — one of:
+  - `feat` — a new feature or skill capability
+  - `fix` — a bug fix or lint/correctness fix
+  - `docs` — documentation-only changes (`README.md`, `SKILL.md` guidance, `references/*`)
+  - `style` — formatting, whitespace, or wording with no behavior change
+  - `refactor` — code/structure change that neither fixes a bug nor adds a feature
+  - `perf` — a change that improves performance
+  - `test` — adding or correcting tests/fixtures
+  - `build` — changes to build tooling or dependencies
+  - `ci` — changes to CI/automation configuration
+  - `chore` — routine maintenance (e.g. `.gitignore`, dependency bumps)
+- **scope** (optional) — a short noun in parentheses naming the affected area, e.g. `docs(skill)`, `fix(example)`, `fix(design-md)`.
+- **description** (required) — imperative mood, lowercase, no trailing period, focused on user-visible intent. For example: `feat: enrich extraction methodology + example coverage`, `fix: cross-CLI docs + design.md correctness`, `chore: drop redundant tests/sample.html fixture`.
+- **Breaking changes** — append `!` after the type/scope (`feat!:`) and/or add a footer line starting with `BREAKING CHANGE:` describing the change and migration notes.
+- **body** (optional) — wrap at ~72 columns; explain the *why*, not the *what*. Omit if the description is self-explanatory.
+- **footer** (optional) — reference issues/tickets (`Closes #12`) or add metadata like `BREAKING CHANGE:`.
+
+### Examples
+
+```
+feat(skill): add lint-clean scalar dark variant to EXAMPLE
+```
+
+```
+fix(design-md): correct token naming across sections
+
+Token names drifted from the @google/design.md schema in the
+typography section. Re-aligned with references/design-md-format.md.
+
+Closes #8
+```
+
+```
+feat!: rename `tone` field to `mood` in extracted palette
+
+BREAKING CHANGE: consumers must rename `tone` → `mood`.
+```
+
+Pull requests should describe the changed guidance, list validation commands run, and call out any remaining lint warnings or unverified paths. The PR title should itself be a valid Conventional Commit subject. Link related issues when available. Include before/after snippets only for substantial documentation or schema changes.
