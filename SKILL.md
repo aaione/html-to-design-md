@@ -1,66 +1,44 @@
 ---
 name: html-to-design-md
-description: Generate a DESIGN.md design-system file from a website URL, localhost page, or local HTML file. Use when Codex needs to inspect rendered web UI or static HTML, extract visual identity, tokens, component rules, layout principles, and write DESIGN.md into the current directory or a user-specified output directory, then validate the result with the @google/design.md CLI using npx @google/design.md lint DESIGN.md.
+description: Generate a lint-clean DESIGN.md design-system spec (colors, typography, spacing, components, usage rules) from a website URL, localhost page, or local HTML. Use when the user wants a @google/design.md-formatted design system extracted from an observed UI.
+argument-hint: <url-or-html-path> [output-dir]
+allowed-tools: Read, Write, Bash(npx -y @google/design.md lint *)
 ---
 
 # HTML To DESIGN.md
 
 ## Overview
 
-Create a `DESIGN.md` design-system artifact from a live website, localhost page, or local `.html` file. The output must follow the `@google/design.md` format: YAML frontmatter with design tokens plus Markdown rationale.
+Turn a live website, localhost page, or local `.html` file into a `DESIGN.md` that follows the `@google/design.md` format: YAML frontmatter with machine-readable tokens plus Markdown rationale. Preserve observed source truth; do not invent aesthetics.
 
-Use `references/design-md-format.md` when you need the compact schema, section order, or lint rule reminders.
+Keep `references/design-md-format.md` open for the token schema, canonical section order, and the authoritative lint-rule table. Mirror `references/EXAMPLE.md` for a complete, lint-clean structure.
 
 ## Workflow
 
-1. Resolve inputs:
-   - Source: URL, localhost route, or local HTML path.
-   - Output directory: use the user-specified directory when provided; otherwise use the current working directory.
-   - Final path: always write `<output-directory>/DESIGN.md`.
+1. **Resolve inputs.** The source URL/localhost/local HTML and the optional output dir come from `$ARGUMENTS` (`<url-or-html-path> [output-dir]`). If `$ARGUMENTS` is empty, ask the user for a URL/path. Always write to `<output-dir>/DESIGN.md` (default: current working directory).
 
-2. Inspect the design:
-   - For websites or localhost pages, open the rendered page with the available browser tool and capture desktop plus mobile screenshots when feasible.
-   - For local HTML, open it directly when browser rendering works; otherwise read the HTML/CSS and inspect linked local styles.
-   - Inspect source styles and computed styles before relying on screenshot inference.
-   - Record concrete evidence: colors, fonts, spacing scale, radii, shadows, component states, layout density, navigation, forms, cards, buttons, and responsive behavior.
+2. **Inspect the design.** Capture token evidence — colors, typography, spacing scale, radii, shadows, component states, layout density, responsive behavior. Inspect source and computed styles before relying on screenshot inference; mark any inferred value in prose, never in a token name.
 
-3. Extract tokens:
-   - Prefer exact values from CSS variables, computed styles, Tailwind classes, inline styles, or stylesheet declarations.
-   - Use screenshot sampling only when source styles are unavailable; mark inferred values in prose, not in token names.
-   - Include at minimum `name`, `colors`, `typography`, `rounded`, `spacing`, and useful `components` tokens when observable.
+3. **Extract tokens.** Pull exact values from CSS variables, computed styles, framework classes, or inline styles. Emit at minimum `name`, `colors` (including a `primary`), `typography`, `rounded`, `spacing`, and the observable `components`. When the source exposes a dark/alternate theme, capture those colors as two-element `[light, dark]` arrays and document the mapping in the Colors section.
 
-4. Write `DESIGN.md`:
-   - Start with YAML frontmatter delimited by `---`.
-   - Use exact hex colors, dimensions with units, and token references such as `{colors.primary}` inside component tokens.
-   - Follow canonical section order: `Overview`, `Colors`, `Typography`, `Layout`, `Elevation & Depth`, `Shapes`, `Components`, `Do's and Don'ts`.
-   - Keep prose semantic and operational: describe why tokens exist and how future UI should apply them.
+4. **Write `DESIGN.md`.** Frontmatter delimited by `---`; exact sRGB hex colors; dimensions with units; component tokens reference tokens like `{colors.primary}`. Follow the canonical section order (see the reference). Prose should state *why* tokens exist and *how* future UI applies them. Mirror `references/EXAMPLE.md`.
 
-5. Validate:
-   - Use `npx` so validation does not depend on a global `design.md` install.
-   - From the output directory, run:
+5. **Validate (blocking).** From the output directory run, and treat any error as blocking — fix and rerun until exit 0:
 
 ```bash
-npx @google/design.md lint DESIGN.md
+npx -y @google/design.md lint <output-dir>/DESIGN.md
 ```
 
-   - If `npx` prompts for package installation in a non-interactive shell, rerun with `npx -y @google/design.md lint DESIGN.md` and report the substituted command.
-   - If validation fails because of environment issues such as no network, no disk space, npm cache corruption, or package registry access, do not claim the file passed. Report the exact failure and perform a manual schema pass against `references/design-md-format.md`.
-   - Treat any lint error as blocking. Fix the file and rerun until the command exits successfully.
-   - Warnings are allowed only when they reflect an intentional or source-faithful choice; mention remaining warnings in the final response.
+Only `broken-ref` is a hard error (exit 1); the rest are warnings/info. Warnings (e.g. contrast-ratio, orphaned-tokens) are allowed only when source-faithful — mention remaining ones in the final response. The validator is unpinned (`@google/design.md`), so a pass is authoritative only for the currently-resolved version. If the environment cannot run the CLI (no network, registry blocked, etc.), report the exact failure and do a manual schema pass against the reference instead of claiming success.
+
+## Capabilities & Fallbacks
+
+- **Browser tool.** Rendered-page inspection needs a browser/Playwright-style tool. If none is available, fall back deterministically: (1) fetch raw HTML, (2) read inline + linked CSS, (3) mark all computed-style-dependent tokens as inferred. Never fabricate values a browser would have shown.
+- **JS-rendered / SPA pages.** If fetched HTML is an empty shell (mount node only), require a real browser to render; if unavailable, halt with a clear report rather than emit an empty DESIGN.md. Re-render the same source the same way so re-runs stay reproducible.
+- **Auth-gated pages.** If the page resolves to a login/consent/interstitial, ask the user to authenticate in the active session first. Never treat login chrome as the site's design system.
+- **Multiple pages.** Synthesize shared tokens first; the first page wins for conflicting base tokens; record deviations as named variants under Components. Preserve input order across re-runs.
 
 ## Output Contract
 
-The generated file must:
-
-- Be named exactly `DESIGN.md`.
-- Live in the requested output directory, or the current working directory if none was specified.
 - Preserve observed source truth over aesthetic invention.
-- Include enough tokens and prose for another agent to generate visually consistent screens.
-- Pass `npx @google/design.md lint DESIGN.md` before completion unless local environment failure prevents running the CLI; report that failure with the command output.
-
-## Practical Notes
-
-- If the website is authenticated, inspect only what the user has made accessible in the active browser/session.
-- If assets or fonts are remote and unavailable, infer cautiously from rendered output and document uncertainty in prose.
-- If multiple pages are provided, synthesize shared system tokens first, then note page-specific variants under `Components` or `Do's and Don'ts`.
-- Do not create extra docs, reports, or screenshots unless they are needed for the task or requested by the user.
+- Include enough tokens and prose for another agent to generate visually consistent screens, and exit `npx -y @google/design.md lint` with code 0.

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Atlas Editorial — sample fixture</title>
+  <!--
+    Minimal fixture for the html-to-design-md skill.
+    Every observable token below is declared in inline CSS so the skill can
+    extract exact values without a browser. Pairs with references/EXAMPLE.md.
+  -->
+  <style>
+    :root {
+      --color-primary: #1A1C1E;
+      --color-secondary: #6C7278;
+      --color-accent: #B8422E;
+      --color-background: #F7F5F2;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+    body {
+      margin: 0;
+      background: var(--color-background);
+      color: var(--color-primary);
+      font-family: "Public Sans", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .banner {
+      background: var(--color-primary);
+      color: #FFFFFF;
+      padding: var(--space-md);
+    }
+    .card {
+      background: var(--color-background);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+    }
+    .btn {
+      background: var(--color-accent);
+      color: #FFFFFF;
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: var(--space-sm) var(--space-md);
+      font-weight: 500;
+    }
+    .caption { color: var(--color-secondary); }
+  </style>
+</head>
+<body>
+  <div class="banner">Atlas Editorial</div>
+  <main class="card">
+    <h1>Restraint is the system</h1>
+    <p>A single accent per screen, generous whitespace, two typefaces.</p>
+    <button class="btn">Read more</button>
+    <p class="caption">Caption — metadata in secondary slate.</p>
+  </main>
+</body>
+</html>

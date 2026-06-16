@@ -1,12 +1,12 @@
 # DESIGN.md Format Reference
 
-Use this compact reference when generating or repairing `DESIGN.md` files for the `@google/design.md` CLI.
+Authoritative compact reference for generating or repairing `DESIGN.md` files validated by the `@google/design.md` CLI. Source of truth: the `@google/design.md` spec (`npx @google/design.md lint`).
 
 ## Structure
 
 `DESIGN.md` has two layers:
 
-1. YAML frontmatter with machine-readable tokens.
+1. YAML frontmatter (delimited by `---`) with machine-readable tokens.
 2. Markdown body with human-readable design rationale.
 
 ```md
@@ -24,6 +24,7 @@ typography:
     fontSize: 1rem
     fontWeight: 400
     lineHeight: 1.5
+    letterSpacing: 0em
 rounded:
   sm: 4px
   md: 8px
@@ -34,6 +35,7 @@ components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "#FFFFFF"
+    typography: "{typography.body-md}"
     rounded: "{rounded.md}"
     padding: 12px
 ---
@@ -43,17 +45,41 @@ components:
 ...
 ```
 
-## Token Rules
+## Token Schema
 
-- Colors use sRGB hex strings such as `"#1A1C1E"`.
-- Dimensions include units such as `px`, `rem`, or `em`.
-- Token references use braces, for example `{colors.primary}`.
-- Component properties commonly include `backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, and `width`.
-- Variants can be separate component entries, such as `button-primary-hover`.
+```yaml
+version: <string>          # optional, current value "alpha"
+name: <string>             # REQUIRED
+description: <string>      # optional
+colors:
+  <token>: <Color | [Color, Color]>   # hex string, or a [light, dark] array for themes
+typography:
+  <token>:                  # keys are camelCase
+    fontFamily: <string>
+    fontSize: <Dimension>          # e.g. 16px, 1rem
+    fontWeight: <number>           # e.g. 400
+    lineHeight: <number>           # e.g. 1.6
+    letterSpacing: <Dimension>     # e.g. -0.02em, 0.1em
+rounded:
+  <level>: <Dimension>            # sm/md/lg/full(9999px)
+spacing:
+  <level>: <Dimension | number>
+components:
+  <name>:
+    <prop>: <string | token reference>   # backgroundColor textColor typography rounded padding size height width border-radius
+```
+
+### Token Rules
+
+- **Colors** are sRGB hex strings such as `"#1A1C1E"`. For light/dark themes use a two-element array: `surface: ["#F7F5F2", "#1A1C1E"]` and describe the mapping in the Colors prose. (Array colors are documented in prose; the linter's contrast check targets scalar color pairs.)
+- **Dimensions** include units (`px`, `rem`, `em`).
+- **Token references** use braces, e.g. `{colors.primary}`, `{typography.body-md}`, `{rounded.md}`, `{spacing.md}`. Unresolvable references are the one hard lint error.
+- **Component variants** are separate entries, e.g. `button-primary-hover`.
+- Every defined color token should be referenced by at least one component (unreferenced colors warn as orphaned).
 
 ## Section Order
 
-Use `##` headings in this order when present:
+Use `##` headings in this canonical order (out-of-order sections warn):
 
 1. `Overview`
 2. `Colors`
@@ -66,16 +92,28 @@ Use `##` headings in this order when present:
 
 ## Validation
 
-Run from the directory containing the generated file:
+From the directory containing the file:
 
 ```bash
-npx @google/design.md lint DESIGN.md
+npx -y @google/design.md lint DESIGN.md          # non-interactive (use -y in agents/CI)
+npx -y @google/design.md lint --format json DESIGN.md
 ```
 
-If `npx` requires confirmation in a non-interactive environment, use:
+Exit code is `1` only when errors are found, `0` otherwise.
 
-```bash
-npx -y @google/design.md lint DESIGN.md
-```
+### Lint Rules
 
-Fix lint errors before completion. Common blocking issues are broken token references, duplicate section headings, invalid YAML, invalid color values, and malformed dimensions.
+Only `broken-ref` is a hard error. Everything else is a warning or info — resolve warnings when the choice is source-faithful; report any that remain.
+
+| Rule | Severity | What it checks |
+|:-----|:---------|:---------------|
+| `broken-ref` | **error** | A token reference like `{colors.primary}` that resolves to no defined token |
+| `missing-primary` | warning | Colors are defined but there is no `primary` color |
+| `contrast-ratio` | warning | A component `backgroundColor`/`textColor` pair below WCAG AA (4.5:1) |
+| `orphaned-tokens` | warning | A color token defined but never referenced by any component |
+| `missing-typography` | warning | Colors are defined but no typography tokens exist |
+| `section-order` | warning | Sections appear out of the canonical order above |
+| `token-summary` | info | Per-section count of defined tokens |
+| `missing-sections` | info | Optional sections (spacing, rounded) absent while other tokens exist |
+
+Fix all errors before completion. Common real causes of failure: unresolvable token references, a missing `primary` color, low-contrast component pairs, and out-of-order headings.

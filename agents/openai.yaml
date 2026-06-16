@@ -2,3 +2,12 @@ interface:
   display_name: "HTML to DESIGN.md"
   short_description: "Generate DESIGN.md from websites or HTML"
   default_prompt: "Use $html-to-design-md to generate a DESIGN.md from this website or local HTML file."
+# Catalog / publishing metadata for the open skills ecosystem (skills.sh).
+metadata:
+  version: "0.2.0"
+  license: "MIT"
+  source_repo: "https://github.com/aaione/html-to-design-md"
+  validator: "@google/design.md"
+  compatibility:
+    - claude-code
+    - codex
