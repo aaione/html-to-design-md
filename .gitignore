@@ -7,3 +7,6 @@ npm-debug.log*
 
 # Skill run output (generated DESIGN.md, screenshots, etc.)
 output/
+
+# Local review tooling cache
+.code-review-graph/
