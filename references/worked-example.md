@@ -2,7 +2,7 @@
 
 A complete, copy-pasteable walk from a real HTML snippet to a lint-clean `DESIGN.md`. Where [`EXAMPLE.md`](EXAMPLE.md) is the *destination* (a finished, lint-clean system), this file is the *path* — it shows the extraction reasoning so token granularity and prose choices stay reproducible across runs.
 
-The output frontmatter below is independently verified lint-clean (`npx -y @google/design.md lint` → exit 0, 0 errors, 0 warnings).
+The output frontmatter below is independently verified lint-clean when saved as a standalone `DESIGN.md` (`npx -y @google/design.md lint` → exit 0, 0 errors, 0 warnings).
 
 ---
 

@@ -72,7 +72,7 @@ See [`references/EXAMPLE.md`](references/EXAMPLE.md) for a complete, lint-clean 
 2. **Inspect** the visual system across colors, typography, spacing, radii, shadows, component states, responsive behavior, and domain-specific components.
 3. **Extract** exact token values from CSS variables, computed styles, framework classes, and inline styles. For dark/alternate themes, add separate scalar tokens (e.g. `surface-dark`) and note the mapping in prose — recent linter behavior rejects color arrays.
 4. **Write** `DESIGN.md` following the canonical section order, mirroring `EXAMPLE.md`.
-5. **Validate** with `@google/design.md lint` until it exits 0; only `broken-ref` is a hard error.
+5. **Validate** with `@google/design.md lint` until it exits 0; `broken-ref` and schema failures such as invalid colors are hard errors.
 
 Full operational rules, edge cases (SPA shells, auth-gated pages, multi-page synthesis), and the token schema live in [`SKILL.md`](SKILL.md) and [`references/design-md-format.md`](references/design-md-format.md). A complete HTML→DESIGN.md extraction walk lives in [`references/worked-example.md`](references/worked-example.md).
 
