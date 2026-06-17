@@ -2,6 +2,8 @@
 
 > Turn any website, localhost page, or local HTML file into a lint-clean [`DESIGN.md`](https://github.com/google-labs-code/design.md) design system.
 
+![](./assets/html-to-design-md-architecture.png)
+
 An [Agent Skills](https://agentskills.io) skill that inspects an observed UI, extracts real design tokens (colors, typography, spacing, radii, components), and writes a `DESIGN.md` that passes `@google/design.md lint`. The output is source-faithful — it captures what the UI actually uses rather than inventing an aesthetic.
 
 ## Install
