@@ -4,3 +4,6 @@
 # Node / npx artifacts
 node_modules/
 npm-debug.log*
+
+# Skill run output (generated DESIGN.md, screenshots, etc.)
+output/
