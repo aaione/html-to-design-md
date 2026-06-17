@@ -14,7 +14,7 @@ npx skills add aaione/html-to-design-md -a codex   # target a specific agent
 npx skills add aaione/html-to-design-md -g         # global install
 ```
 
-One canonical `SKILL.md` works across many agents via the [skills CLI](https://skills.sh) (`vercel-labs/skills`), which symlinks it into each agent's skills directory (`.claude/skills/`, `.agents/skills/`, `.codex/skills/`, …) — no per-agent adapters needed. Install flags and the supported-agent list follow whatever the installed CLI reports (`skills add --help`). (`agents/openai.yaml` carries optional Codex catalog metadata.)
+One canonical `SKILL.md` works across many agents via the [skills CLI](https://skills.sh) (`vercel-labs/skills`), which symlinks the skill directory into each agent's skills directory (`.claude/skills/`, `.agents/skills/`, `.codex/skills/`, …) — no per-agent adapters needed. Install flags and the supported-agent list follow whatever the installed CLI reports (`skills add --help`). (`skills/html-to-design-md/agents/openai.yaml` carries optional Codex catalog metadata.)
 
 ## Use
 
@@ -66,7 +66,7 @@ components:
 ...
 ```
 
-See [`references/EXAMPLE.md`](references/EXAMPLE.md) for a complete, lint-clean sample covering all eight sections.
+See [`skills/html-to-design-md/references/EXAMPLE.md`](skills/html-to-design-md/references/EXAMPLE.md) for a complete, lint-clean sample covering all eight sections.
 
 ## How it works
 
@@ -76,7 +76,7 @@ See [`references/EXAMPLE.md`](references/EXAMPLE.md) for a complete, lint-clean 
 4. **Write** `DESIGN.md` following the canonical section order, mirroring `EXAMPLE.md`.
 5. **Validate** with `@google/design.md lint` until it exits 0; only `broken-ref` is a hard error.
 
-Full operational rules, edge cases (SPA shells, auth-gated pages, multi-page synthesis), and the token schema live in [`SKILL.md`](SKILL.md) and [`references/design-md-format.md`](references/design-md-format.md).
+Full operational rules, edge cases (SPA shells, auth-gated pages, multi-page synthesis), and the token schema live in [`skills/html-to-design-md/SKILL.md`](skills/html-to-design-md/SKILL.md) and [`skills/html-to-design-md/references/design-md-format.md`](skills/html-to-design-md/references/design-md-format.md).
 
 The skill is deliberately evidence-first. If the page is only an auth wall, consent screen, empty SPA shell, or otherwise cannot be inspected with available tools, it reports the blocker instead of fabricating a design system.
 
@@ -85,7 +85,7 @@ The skill is deliberately evidence-first. If the page is only an auth wall, cons
 The bundled example doubles as a fixture:
 
 ```bash
-npx -y @google/design.md lint references/EXAMPLE.md   # expect exit 0
+npx -y @google/design.md lint skills/html-to-design-md/references/EXAMPLE.md   # expect exit 0
 ```
 
 Use a Node/npm version compatible with the resolved `@google/design.md` package.
@@ -94,8 +94,8 @@ Use a Node/npm version compatible with the resolved `@google/design.md` package.
 
 | Agent | Status | Adapter |
 |:------|:-------|:--------|
-| Claude Code | Supported | `SKILL.md` |
-| Codex / OpenAI | Supported | `agents/openai.yaml` |
+| Claude Code | Supported | `skills/html-to-design-md/SKILL.md` |
+| Codex / OpenAI | Supported | `skills/html-to-design-md/agents/openai.yaml` |
 | Cursor, Cline, Copilot, Gemini, others | Standard `SKILL.md` via skills CLI | — |
 
 ## License

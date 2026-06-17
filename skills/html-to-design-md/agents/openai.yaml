@@ -4,7 +4,7 @@ interface:
   default_prompt: "Use $html-to-design-md to generate a DESIGN.md from this website or local HTML file."
 # Catalog / publishing metadata for the open skills ecosystem (skills.sh).
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
   license: "MIT"
   source_repo: "https://github.com/aaione/html-to-design-md"
   validator: "@google/design.md"
