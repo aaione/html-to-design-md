@@ -16,7 +16,7 @@ allowed-tools: Read, Write, Bash(npx -y @google/design.md lint *)
 
 Turn a live website, localhost page, or local `.html` file into a `DESIGN.md` that follows the `@google/design.md` format: YAML frontmatter with machine-readable tokens plus Markdown rationale. Preserve observed source truth; do not invent aesthetics.
 
-Keep `references/design-md-format.md` open for the token schema, canonical section order, and the authoritative lint-rule table. Mirror `references/EXAMPLE.md` for a complete, lint-clean structure.
+Keep `references/design-md-format.md` open for the token schema, canonical section order, and the authoritative lint-rule table. Mirror `references/EXAMPLE.md` for a complete, lint-clean structure. Follow `references/worked-example.md` for a full HTML→DESIGN.md extraction walk (input → token decisions → lint).
 
 ## Workflow
 
@@ -44,7 +44,7 @@ Keep `references/design-md-format.md` open for the token schema, canonical secti
 npx -y @google/design.md lint <output-dir>/DESIGN.md
 ```
 
-Only `broken-ref` is a hard error (exit 1); the rest are warnings/info. Warnings (e.g. contrast-ratio, orphaned-tokens) are allowed only when source-faithful — mention remaining ones in the final response. The validator is unpinned (`@google/design.md`), so a pass is authoritative only for the currently-resolved version. If the environment cannot run the CLI (no network, registry blocked, etc.), report the exact failure and do a manual schema pass against the reference instead of claiming success.
+Hard errors (exit 1) are `broken-ref` and schema failures such as an invalid color value (e.g. a color array → `is not a valid color`); the rest are warnings/info. Warnings (e.g. contrast-ratio, orphaned-tokens) are allowed only when source-faithful — mention remaining ones in the final response. The validator is unpinned (`@google/design.md`), so a pass is authoritative only for the currently-resolved version. If the environment cannot run the CLI (no network, registry blocked, etc.), report the exact failure and do a manual schema pass against the reference instead of claiming success.
 
 ## Capabilities & Fallbacks
 

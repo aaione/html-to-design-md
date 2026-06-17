@@ -11,3 +11,10 @@ metadata:
   compatibility:
     - claude-code
     - codex
+  keywords:
+    - design-system
+    - design-tokens
+    - design-md
+    - html
+    - extraction
+    - lint
