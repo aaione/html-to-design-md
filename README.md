@@ -74,7 +74,7 @@ See [`references/EXAMPLE.md`](references/EXAMPLE.md) for a complete, lint-clean 
 4. **Write** `DESIGN.md` following the canonical section order, mirroring `EXAMPLE.md`.
 5. **Validate** with `@google/design.md lint` until it exits 0; only `broken-ref` is a hard error.
 
-Full operational rules, edge cases (SPA shells, auth-gated pages, multi-page synthesis), and the token schema live in [`SKILL.md`](SKILL.md) and [`references/design-md-format.md`](references/design-md-format.md).
+Full operational rules, edge cases (SPA shells, auth-gated pages, multi-page synthesis), and the token schema live in [`SKILL.md`](SKILL.md) and [`references/design-md-format.md`](references/design-md-format.md). A complete HTML→DESIGN.md extraction walk lives in [`references/worked-example.md`](references/worked-example.md).
 
 The skill is deliberately evidence-first. If the page is only an auth wall, consent screen, empty SPA shell, or otherwise cannot be inspected with available tools, it reports the blocker instead of fabricating a design system.
 
