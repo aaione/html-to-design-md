@@ -4,17 +4,17 @@
 
 This repository is an Agent Skills package for generating lint-clean `DESIGN.md` files from observed HTML or websites.
 
-- `SKILL.md` is the canonical skill implementation and operating contract. The skills CLI symlinks this single file into every target agent's skills dir — edit once, never fork per-agent adapters.
+- `skills/html-to-design-md/SKILL.md` is the canonical skill implementation and operating contract. The skills CLI symlinks this single directory into every target agent's skills dir — edit once, never fork per-agent adapters.
 - `README.md` explains install, usage, validation, and compatibility.
-- `references/design-md-format.md` documents the target `@google/design.md` schema and lint rules.
-- `references/EXAMPLE.md` is the primary lint-clean fixture and structure example.
-- `agents/openai.yaml` contains Codex/OpenAI catalog metadata.
+- `skills/html-to-design-md/references/design-md-format.md` documents the target `@google/design.md` schema and lint rules.
+- `skills/html-to-design-md/references/EXAMPLE.md` is the primary lint-clean fixture and structure example.
+- `skills/html-to-design-md/agents/openai.yaml` contains Codex/OpenAI catalog metadata.
 
 There is no compiled source tree or bundled asset pipeline; changes are primarily Markdown and YAML.
 
 ## Build, Test, and Development Commands
 
-- `npx -y @google/design.md lint references/EXAMPLE.md` validates the bundled example fixture.
+- `npx -y @google/design.md lint skills/html-to-design-md/references/EXAMPLE.md` validates the bundled example fixture.
 - `npx -y @google/design.md lint <output-dir>/DESIGN.md` validates generated design-system output.
 - `git status --short` checks that only intentional files changed.
 
@@ -26,7 +26,7 @@ Use concise Markdown with sentence-case prose and clear imperative instructions.
 
 ## Testing Guidelines
 
-The main regression check is the `@google/design.md` linter against `references/EXAMPLE.md` and any newly generated `DESIGN.md`. Treat lint errors as blocking. Warnings are acceptable only when they reflect source-faithful output and should be mentioned in review notes. If you change schema guidance, update `references/EXAMPLE.md` when needed so the documented pattern remains lint-clean.
+The main regression check is the `@google/design.md` linter against `skills/html-to-design-md/references/EXAMPLE.md` and any newly generated `DESIGN.md`. Treat lint errors as blocking. Warnings are acceptable only when they reflect source-faithful output and should be mentioned in review notes. If you change schema guidance, update `skills/html-to-design-md/references/EXAMPLE.md` when needed so the documented pattern remains lint-clean.
 
 ## Commit & Pull Request Guidelines
 
@@ -43,7 +43,7 @@ Commits follow the [Conventional Commits](https://www.conventionalcommits.org/) 
 - **type** (required, lowercase) — one of:
   - `feat` — a new feature or skill capability
   - `fix` — a bug fix or lint/correctness fix
-  - `docs` — documentation-only changes (`README.md`, `SKILL.md` guidance, `references/*`)
+  - `docs` — documentation-only changes (`README.md`, `skills/html-to-design-md/SKILL.md` guidance, `skills/html-to-design-md/references/*`)
   - `style` — formatting, whitespace, or wording with no behavior change
   - `refactor` — code/structure change that neither fixes a bug nor adds a feature
   - `perf` — a change that improves performance
@@ -67,7 +67,7 @@ feat(skill): add lint-clean scalar dark variant to EXAMPLE
 fix(design-md): correct token naming across sections
 
 Token names drifted from the @google/design.md schema in the
-typography section. Re-aligned with references/design-md-format.md.
+typography section. Re-aligned with skills/html-to-design-md/references/design-md-format.md.
 
 Closes #8
 ```
